@@ -9,7 +9,6 @@ import com.stockmarket.core_d.domain.Error;
 import com.stockmarket.core_d.events.CompanyRegisteredEvent;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import org.jetbrains.annotations.NotNull;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -18,7 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @DynamoDBTable(tableName = "companies")
-public class Company extends AggregateRoot implements Comparable{
+public class Company extends AggregateRoot {
 
     private String companyCode;
     private String _id;
@@ -55,35 +54,33 @@ public class Company extends AggregateRoot implements Comparable{
 
     private void validate(CreateCompany createCompany) {
         List<Error> errors = new ArrayList<>();
+        String INVALID_INPUT = "INVALID_INPUT";
         if (mandatoryCheck(createCompany.getCompanyCode())) {
-            errors.add(new Error("INVALID_INPUT", "companyCode is invalid input"));
+            errors.add(new Error(INVALID_INPUT, "companyCode is invalid input"));
             createCompany.setErrors(errors);
         } else if (mandatoryCheck(createCompany.getCompanyName())) {
-            errors.add(new Error("INVALID_INPUT", "companyName is invalid input"));
+            errors.add(new Error(INVALID_INPUT, "companyName is invalid input"));
             createCompany.setErrors(errors);
         } else if (mandatoryCheck(createCompany.getCompanyCEO())) {
-            errors.add(new Error("INVALID_INPUT", "companyCEO is invalid input"));
+            errors.add(new Error(INVALID_INPUT, "companyCEO is invalid input"));
             createCompany.setErrors(errors);
         } else if (createCompany.getCompanyTurnover() == null) {
-            errors.add(new Error("INVALID_INPUT", "companyTurnover is invalid input"));
+            errors.add(new Error(INVALID_INPUT, "companyTurnover is invalid input"));
             createCompany.setErrors(errors);
         } else if (mandatoryCheck(createCompany.getCompanyWebsite())) {
-            errors.add(new Error("INVALID_INPUT", "companyWebsite is invalid input"));
+            errors.add(new Error(INVALID_INPUT, "companyWebsite is invalid input"));
             createCompany.setErrors(errors);
         } else if (mandatoryCheck(createCompany.getStockExchange())) {
-            errors.add(new Error("INVALID_INPUT", "stockExchange is invalid input"));
+            errors.add(new Error(INVALID_INPUT, "stockExchange is invalid input"));
             createCompany.setErrors(errors);
         } else if (createCompany.getCompanyTurnover().compareTo(10.00d) < 0) {
-            errors.add(new Error("INVALID_INPUT", "companyTurnover must be greater than 10Cr."));
+            errors.add(new Error(INVALID_INPUT, "companyTurnover must be greater than 10Cr."));
             createCompany.setErrors(errors);
         }
     }
 
     private boolean mandatoryCheck(String field) {
-        if (field == null || field.isEmpty()) {
-            return true;
-        }
-        return false;
+        return field == null || field.isEmpty();
     }
 
     @DynamoDBHashKey
@@ -185,8 +182,4 @@ public class Company extends AggregateRoot implements Comparable{
         this.modifiedBy = modifiedBy;
     }
 
-    @Override
-    public int compareTo(@NotNull Object o) {
-        return 0;
-    }
 }

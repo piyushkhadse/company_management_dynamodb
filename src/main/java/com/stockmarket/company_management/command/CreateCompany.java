@@ -1,7 +1,6 @@
 package com.stockmarket.company_management.command;
 
 import com.stockmarket.core_d.command.Command;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 

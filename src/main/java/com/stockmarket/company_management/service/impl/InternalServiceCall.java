@@ -39,8 +39,7 @@ public class InternalServiceCall {
             String token = headers1.get("authorization").split("Bearer ")[1];
             headers.setBearerAuth(token);
             HttpEntity<String> entity = new HttpEntity<>(null, headers);
-            int result = restTemplate.exchange(uri, HttpMethod.DELETE, entity, Object.class).getStatusCodeValue();
-            return result;
+            return restTemplate.exchange(uri, HttpMethod.DELETE, entity, Object.class).getStatusCodeValue();
         } catch (ApplicationException exception) {
             logger.error().log("Error while deleting stock prices for a companyCode:{}, url:{}", companyCode, url, exception);
             throw exception;
