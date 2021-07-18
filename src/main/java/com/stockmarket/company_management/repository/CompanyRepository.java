@@ -3,6 +3,7 @@ package com.stockmarket.company_management.repository;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
 import com.stockmarket.company_management.domain.Company;
+import com.stockmarket.core_d.logger.StockMarketApplicationLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -14,6 +15,7 @@ public class CompanyRepository {
     @Autowired
     private DynamoDBMapper dynamoDBMapper;
 
+    StockMarketApplicationLogger logger = StockMarketApplicationLogger.getLogger(this.getClass());
 
     public Company save(Company company) {
         dynamoDBMapper.save(company);
@@ -30,7 +32,7 @@ public class CompanyRepository {
             DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
             resp = dynamoDBMapper.scan(Company.class, scanExpression);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error().log("Error while finding all companies",e);
         }
         return resp;
     }
